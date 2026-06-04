@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adam van der Steeg — Senior QA Engineer · AI Test Automation</title>
+<meta name="description" content="13 years in QA. Building AI-powered test automation with Claude Code, C#/NUnit and Playwright. Alkmaar, Netherlands." />
+<meta property="og:title" content="Adam van der Steeg — Senior QA Engineer" />
+<meta property="og:description" content="Senior QA Engineer specializing in AI tooling, Claude Code, and test automation." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0d12;
+    --bg-soft: #0e1218;
+    --card: #11161e;
+    --card-soft: #141a23;
+    --border: #232b36;
+    --fg: #e8edf4;
+    --muted: #8b97a7;
+    --neon-green: #1fe089;
+    --neon-cyan: #1fd6e0;
+    --neon-magenta: #e040a8;
+    --neon-yellow: #e8d44d;
+    --gradient-neon: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+    --gradient-aurora: linear-gradient(100deg, var(--neon-green), var(--neon-cyan) 45%, var(--neon-magenta));
+    --shadow-neon: 0 8px 30px -8px rgba(31, 224, 137, 0.5);
+    --maxw: 1120px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .grotesk { font-family: 'Space Grotesk', 'Inter', sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+  /* ---- Ambient background ---- */
+  .ambient { position: fixed; inset: 0; z-index: -10; pointer-events: none; overflow: hidden; }
+  .grid-bg {
+    position: absolute; inset: 0; opacity: 0.4;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+  .blob { position: absolute; border-radius: 9999px; filter: blur(120px); }
+  .blob-1 { top: -160px; left: -160px; width: 480px; height: 480px; background: var(--neon-green); opacity: 0.30; }
+  .blob-2 { top: 33%; right: -160px; width: 520px; height: 520px; background: var(--neon-cyan); opacity: 0.18; }
+  .blob-3 { bottom: 0; left: 50%; width: 400px; height: 400px; background: var(--neon-magenta); opacity: 0.14; }
+
+  /* ---- Nav ---- */
+  header.nav {
+    position: sticky; top: 0; z-index: 40;
+    border-bottom: 1px solid rgba(35,43,54,0.6);
+    backdrop-filter: blur(18px);
+    background: rgba(10,13,18,0.7);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 600; letter-spacing: -0.01em; }
+  .dot { height: 10px; width: 10px; border-radius: 9999px; background: var(--neon-green); }
+  .pulse { animation: pulse 2s ease-in-out infinite; box-shadow: 0 0 0 0 rgba(31,224,137,0.6); }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(31,224,137,0.55); }
+    70% { box-shadow: 0 0 0 8px rgba(31,224,137,0); }
+    100% { box-shadow: 0 0 0 0 rgba(31,224,137,0); }
+  }
+  nav.links { display: none; gap: 28px; font-size: 14px; color: var(--muted); }
+  nav.links a:hover { color: var(--fg); }
+  .btn-contact {
+    display: inline-flex; align-items: center; gap: 6px;
+    border-radius: 9999px; padding: 9px 16px; font-size: 14px; font-weight: 600;
+    color: #062013; background: var(--gradient-neon); box-shadow: var(--shadow-neon);
+    transition: transform 0.2s ease;
+  }
+  .btn-contact:hover { transform: scale(1.03); }
+  @media (min-width: 768px) { nav.links { display: flex; } }
+
+  /* ---- Section primitives ---- */
+  section { padding: 96px 0; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); }
+  .eyebrow .bar { height: 1px; width: 32px; background: var(--neon-green); display: inline-block; }
+  .sec-title { margin-top: 12px; font-weight: 700; letter-spacing: -0.02em; font-size: clamp(30px, 5vw, 52px); }
+  .sec-title.small { font-size: clamp(26px, 4vw, 32px); }
+
+  /* ---- Hero ---- */
+  .hero { padding-top: 80px; padding-bottom: 96px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border); background: rgba(20,26,35,0.6);
+    border-radius: 9999px; padding: 5px 12px; font-size: 12px; color: var(--muted);
+  }
+  .badge .dot-sm { height: 6px; width: 6px; border-radius: 9999px; background: var(--neon-green); }
+  h1.name { margin-top: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.02; font-size: clamp(44px, 9vw, 84px); }
+  .aurora {
+    background: var(--gradient-aurora); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lede { margin-top: 24px; max-width: 640px; font-size: clamp(17px, 2.2vw, 21px); color: var(--muted); }
+  .lede b { color: var(--fg); font-weight: 500; }
+  .chips { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    border: 1px solid var(--border); background: rgba(20,26,35,0.6);
+    border-radius: 9999px; padding: 7px 14px; color: var(--muted);
+  }
+  .chip svg { width: 14px; height: 14px; }
+
+  .stats { margin-top: 56px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (min-width: 768px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+  .stat { border: 1px solid var(--border); background: rgba(20,26,35,0.55); border-radius: 16px; padding: 20px; }
+  .stat .v { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
+  .stat .l { margin-top: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+
+  /* ---- Timeline ---- */
+  .timeline { position: relative; margin-top: 56px; }
+  .spine {
+    position: absolute; top: 8px; bottom: 8px; left: 16px; width: 2px;
+    background: linear-gradient(180deg, var(--neon-green), var(--neon-cyan), var(--neon-magenta), transparent);
+  }
+  .titem { position: relative; padding-left: 48px; margin-bottom: 48px; }
+  .node {
+    position: absolute; left: 16px; top: 24px; transform: translateX(-50%); z-index: 10;
+  }
+  .node .ring { height: 14px; width: 14px; border-radius: 9999px; box-shadow: 0 0 0 4px var(--bg); }
+  .tcard {
+    border: 1px solid var(--border); background: rgba(17,22,30,0.7);
+    border-radius: 16px; padding: 24px; backdrop-filter: blur(6px);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .tcard:hover { transform: translateY(-2px); background: var(--card); }
+  .tmeta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .period { border-radius: 9999px; padding: 2px 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .current-tag { border-radius: 9999px; background: rgba(31,224,137,0.18); color: var(--neon-green); padding: 2px 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .trole { margin-top: 12px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .tcompany { font-size: 14px; color: var(--muted); }
+  .tcard ul { list-style: none; margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .tcard li { display: flex; gap: 10px; font-size: 14px; color: var(--muted); }
+  .tcard li .b { margin-top: 9px; height: 4px; width: 4px; flex: none; border-radius: 9999px; }
+
+  /* Desktop alternating timeline */
+  @media (min-width: 860px) {
+    .spine { left: 50%; }
+    .node { left: 50%; }
+    .titem { padding-left: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+    .titem.left .tcard { grid-column: 1; text-align: right; }
+    .titem.left .tmeta { justify-content: flex-end; }
+    .titem.left ul { align-items: flex-end; }
+    .titem.left li { flex-direction: row-reverse; text-align: right; }
+    .titem.right .tcard { grid-column: 2; }
+  }
+
+  /* ---- Skills ---- */
+  .grid-cards { margin-top: 56px; display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 700px) { .grid-cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .grid-cards { grid-template-columns: repeat(3, 1fr); } }
+  .scard { border: 1px solid var(--border); background: rgba(20,26,35,0.55); border-radius: 16px; padding: 24px; transition: border-color 0.2s, background 0.2s; }
+  .scard:hover { background: var(--card); border-color: rgba(255,255,255,0.12); }
+  .scard-head { display: flex; align-items: center; gap: 12px; }
+  .icon-box { display: grid; place-items: center; height: 40px; width: 40px; border-radius: 12px; }
+  .icon-box svg { width: 20px; height: 20px; }
+  .scard h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+  .tags { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { border: 1px solid var(--border); background: rgba(10,13,18,0.6); border-radius: 9999px; padding: 4px 10px; font-size: 12px; color: var(--muted); transition: color 0.2s; }
+  .scard:hover .tag { color: var(--fg); }
+
+  /* ---- Feature cards (AI work) ---- */
+  .grid-2 { margin-top: 56px; display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 760px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
+  .fcard { position: relative; overflow: hidden; border: 1px solid var(--border); background: rgba(20,26,35,0.55); border-radius: 16px; padding: 28px; transition: transform 0.2s ease; }
+  .fcard:hover { transform: translateY(-4px); }
+  .fcard .glow { position: absolute; top: -64px; right: -64px; height: 160px; width: 160px; border-radius: 9999px; filter: blur(80px); opacity: 0; transition: opacity 0.3s; }
+  .fcard:hover .glow { opacity: 0.3; }
+  .fcard-head { position: relative; display: flex; align-items: center; justify-content: space-between; }
+  .icon-box-lg { display: grid; place-items: center; height: 44px; width: 44px; border-radius: 12px; }
+  .icon-box-lg svg { width: 20px; height: 20px; }
+  .fcard .tagpill { border: 1px solid var(--border); background: rgba(10,13,18,0.6); border-radius: 9999px; padding: 4px 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  .fcard h3 { position: relative; margin-top: 20px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .fcard p { position: relative; margin-top: 8px; font-size: 14px; color: var(--muted); }
+
+  /* ---- Education + Languages ---- */
+  .two-col { display: grid; grid-template-columns: 1fr; gap: 40px; }
+  @media (min-width: 800px) { .two-col { grid-template-columns: repeat(2, 1fr); } }
+  .stack { margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+  .edu { border: 1px solid var(--border); background: rgba(20,26,35,0.55); border-radius: 16px; padding: 20px; }
+  .edu-row { display: flex; align-items: flex-start; gap: 12px; }
+  .edu-icon { display: grid; place-items: center; height: 36px; width: 36px; border-radius: 10px; flex: none; background: color-mix(in oklab, var(--neon-green) 15%, transparent); color: var(--neon-green); }
+  .edu-icon svg { width: 16px; height: 16px; }
+  .edu .t { font-weight: 600; }
+  .edu .o { font-size: 12px; color: var(--muted); }
+  .edu .s { margin-top: 8px; font-size: 12px; color: var(--muted); }
+  .lang { border: 1px solid var(--border); background: rgba(20,26,35,0.55); border-radius: 16px; padding: 16px; }
+  .lang-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .lang-top .name { font-weight: 600; }
+  .lang-top .level { font-size: 12px; color: var(--muted); }
+  .bar { margin-top: 12px; height: 6px; width: 100%; border-radius: 9999px; background: #1b2230; overflow: hidden; }
+  .bar > div { height: 100%; border-radius: 9999px; background: var(--gradient-neon); width: 0; transition: width 1.1s cubic-bezier(0.22,1,0.36,1); }
+  .nat { margin-top: 40px; border: 1px solid var(--border); background: rgba(20,26,35,0.55); border-radius: 16px; padding: 24px; }
+  .nat .lbl { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+  .nat .lbl svg { width: 16px; height: 16px; }
+  .nat .val { margin-top: 8px; font-weight: 600; }
+
+  /* ---- CTA ---- */
+  .cta-wrap { padding-bottom: 128px; }
+  .cta {
+    position: relative; overflow: hidden; border: 1px solid var(--border);
+    border-radius: 24px; padding: clamp(32px, 6vw, 64px);
+    background: linear-gradient(135deg, #161c26 0%, #131c22 100%);
+  }
+  .cta .glow { position: absolute; top: -96px; right: -96px; height: 288px; width: 288px; border-radius: 9999px; filter: blur(110px); opacity: 0.3; background: var(--neon-green); }
+  .cta h2 { position: relative; font-size: clamp(28px, 5vw, 48px); font-weight: 700; letter-spacing: -0.02em; max-width: 640px; }
+  .cta .neon-word { background: var(--gradient-neon); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .cta p { position: relative; margin-top: 16px; max-width: 520px; color: var(--muted); }
+  .cta-btns { position: relative; margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .cta-btns a { display: inline-flex; align-items: center; gap: 8px; border-radius: 9999px; padding: 12px 20px; font-size: 14px; font-weight: 600; }
+  .cta-btns svg { width: 16px; height: 16px; }
+  .cta-primary { color: #062013; background: var(--gradient-neon); box-shadow: var(--shadow-neon); }
+  .cta-secondary { border: 1px solid var(--border); background: rgba(10,13,18,0.6); color: var(--fg); transition: border-color 0.2s; }
+  .cta-secondary:hover { border-color: rgba(255,255,255,0.4); }
+
+  footer { border-top: 1px solid rgba(35,43,54,0.6); }
+  .foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 32px 24px; font-size: 12px; color: var(--muted); }
+  .foot .role { display: flex; align-items: center; gap: 8px; }
+  .foot svg { width: 14px; height: 14px; }
+
+  /* ---- Reveal animation ---- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .bar > div { transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+  <div class="grid-bg"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<!-- Nav -->
+<header class="nav">
+  <div class="nav-inner wrap">
+    <div class="brand grotesk"><span class="dot pulse"></span> adam.vds</div>
+    <nav class="links">
+      <a href="#timeline">Timeline</a>
+      <a href="#skills">Skills</a>
+      <a href="#ai">AI Work</a>
+      <a href="#education">Education</a>
+    </nav>
+    <a class="btn-contact" href="mailto:adamvds1234@gmail.com">Contact
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+    </a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="wrap reveal">
+    <div class="badge"><span class="dot-sm"></span> Available · Alkmaar, Netherlands</div>
+    <h1 class="name grotesk">Adam van der<br /><span class="aurora">Steeg.</span></h1>
+    <p class="lede">Senior QA Engineer with <b>13 years</b> in software testing — now building <b>AI-powered test automation</b> with Claude Code, C#/NUnit and Playwright.</p>
+
+    <div class="chips">
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        Alkmaar, NL</span>
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 5L2 7"></path></svg>
+        adamvds1234@gmail.com</span>
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        JaptVanDerKook</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat reveal"><div class="v grotesk" style="color:var(--neon-green)">13+</div><div class="l">Years in QA</div></div>
+      <div class="stat reveal"><div class="v grotesk" style="color:var(--neon-cyan)">2×</div><div class="l">NICE Super Bonus</div></div>
+      <div class="stat reveal"><div class="v grotesk" style="color:var(--neon-magenta)">6</div><div class="l">Anthropic Courses</div></div>
+      <div class="stat reveal"><div class="v grotesk" style="color:var(--neon-yellow)">∞</div><div class="l">Context Switches</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section id="timeline">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow"><span class="bar"></span> Career timeline</div>
+      <h2 class="sec-title grotesk">Milestones &amp; momentum</h2>
+    </div>
+    <div class="timeline" id="timeline-list">
+      <div class="spine"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow"><span class="bar"></span> Toolkit</div>
+      <h2 class="sec-title grotesk">Skills &amp; stack</h2>
+    </div>
+    <div class="grid-cards" id="skills-grid"></div>
+  </div>
+</section>
+
+<!-- AI Work -->
+<section id="ai">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow"><span class="bar"></span> AI &amp; continuous learning</div>
+      <h2 class="sec-title grotesk">What I&rsquo;ve actually shipped</h2>
+    </div>
+    <div class="grid-2" id="ai-grid"></div>
+  </div>
+</section>
+
+<!-- Education + Languages -->
+<section id="education">
+  <div class="wrap two-col">
+    <div class="reveal">
+      <div class="eyebrow"><span class="bar"></span> Education</div>
+      <h2 class="sec-title small grotesk">Foundations</h2>
+      <div class="stack">
+        <div class="edu">
+          <div class="edu-row">
+            <div class="edu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></div>
+            <div>
+              <div class="t">ND Information Technology (INF306)</div>
+              <div class="o">Durban University of Technology · 2003</div>
+              <div class="s">VB.NET · Java · Oracle · Information Systems · System Software</div>
+            </div>
+          </div>
+        </div>
+        <div class="edu">
+          <div class="edu-row">
+            <div class="edu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></div>
+            <div>
+              <div class="t">Information Technology Certificate</div>
+              <div class="o">Berea Technical College · 2002</div>
+              <div class="s">COBOL · Programming Concepts</div>
+            </div>
+          </div>
+        </div>
+        <div class="edu">
+          <div class="edu-row">
+            <div class="edu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></div>
+            <div>
+              <div class="t">ISTQB Advanced — Test Analyst</div>
+              <div class="o">Completed via testinginstitute.com</div>
+              <div class="s">Plus Performance Testing, SQL Server 2012, Applied Information Security (UNISA / sqs.com)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="eyebrow"><span class="bar"></span> Languages</div>
+      <h2 class="sec-title small grotesk">How I communicate</h2>
+      <div class="stack">
+        <div class="lang">
+          <div class="lang-top"><span class="name">English</span><span class="level">Fluent · speak · read · write</span></div>
+          <div class="bar"><div data-pct="100"></div></div>
+        </div>
+        <div class="lang">
+          <div class="lang-top"><span class="name">Afrikaans</span><span class="level">Fluent · speak · read · write</span></div>
+          <div class="bar"><div data-pct="100"></div></div>
+        </div>
+        <div class="lang">
+          <div class="lang-top"><span class="name">Dutch</span><span class="level">Conversational — 8+ years in NL</span></div>
+          <div class="bar"><div data-pct="65"></div></div>
+        </div>
+      </div>
+      <div class="nat">
+        <div class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Nationality</div>
+        <div class="val">Dutch &amp; South African</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-wrap">
+  <div class="wrap reveal">
+    <div class="cta">
+      <div class="glow"></div>
+      <h2 class="grotesk">Let&rsquo;s make the mechanical parts of QA <span class="neon-word">short</span>.</h2>
+      <p>So the team can focus on coverage and edge cases. Open to senior QA automation roles &amp; AI tooling work.</p>
+      <div class="cta-btns">
+        <a class="cta-primary" href="mailto:adamvds1234@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 5L2 7"></path></svg>
+          adamvds1234@gmail.com
+        </a>
+        <a class="cta-secondary" href="https://github.com/JaptVanDerKook" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          github.com/JaptVanDerKook
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot wrap">
+    <div>© <span id="year"></span> Adam van der Steeg</div>
+    <div class="role">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+      Senior QA Engineer · AI Test Automation
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- Icons (inline SVG strings) ----
+  var ICONS = {
+    bot: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>',
+    code: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>',
+    sparkles: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"></path><path d="M19 16l.9 2.4L22 19l-2.1.6L19 22l-.9-2.4L16 19l2.1-.6z"></path></svg>',
+    testtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2v17.5a2.5 2.5 0 0 1-5 0V2"></path><path d="M8.5 2h7"></path><path d="M14.5 14h-5"></path></svg>',
+    zap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
+    award: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M15.5 13l1.5 8-5-3-5 3 1.5-8"></path></svg>'
+  };
+
+  // ---- Data ----
+  var timeline = [
+    { role: "QA Automation Engineer", company: "NICE B.V. — XTest Team", location: "Alkmaar, NL", period: "2026 — Present", current: true, color: "var(--neon-green)", bullets: [
+      "Dedicated Test Automation team. Stack: C#, NUnit, Playwright — Claude Code in the daily workflow.",
+      "Writing NUnit skeletons from DTOs/service contracts, POM classes and e2e flows; Claude Code reviews before a manual pass.",
+      "Built and maintain a Claude SKILLs library the team actually uses — reusable prompts that produce code that fits our structure.",
+      "PR reviews start with a Claude Code pass to flag logic gaps before the team sees it." ] },
+    { role: "Senior QA Engineer", company: "NICE B.V.", location: "Alkmaar, NL", period: "2018 — 2025", color: "var(--neon-cyan)", bullets: [
+      "Placed in the Fire-Fighting Team within 3 months — customer-facing issues, tight deadlines, constant context switching. Stayed because it suited me.",
+      "Cloud telephony capture & recording (niceincontact / NICE CXone).",
+      "NICE super bonus — twice.",
+      "Built an internal Python + Anthropic API tool that generates test cases from a schema and exports a runnable Postman collection." ] },
+    { role: "Software Tester (QA)", company: "ZipAddress Ltd / AFD Software", location: "Isle of Man", period: "2017 — 2018", color: "var(--neon-magenta)", bullets: [
+      "Brought in to improve QA maturity — Scrum ceremonies, IEEE 829 test plans, retrospectives, kick-offs.",
+      "Tools: Mantis, JMeter, Docker, Rancher. A/B testing across agile tooling.",
+      "Offered a management role; declined due to a planned move to the Netherlands." ] },
+    { role: "Developer (Back Office)", company: "Derivco", location: "La Lucia, South Africa", period: "2015 — 2016", color: "var(--neon-yellow)", bullets: [
+      "Maintained internal back-office apps — C#, Silverlight, HTML, JS, CSS3, Polymer.",
+      "Bug tracking & collaboration via Confluence, GIT, Charles, Fiddler." ] },
+    { role: "Team Lead", company: "Derivco", location: "La Lucia, South Africa", period: "2014 — 2015", color: "var(--neon-cyan)", bullets: [
+      "Strategy, test plans, daily resource allocation and 1-on-1 development catch-ups.",
+      "Tooling across Jira, Mantis, Fogbugz, Redmine, GitLab." ] },
+    { role: "Tester / LQA", company: "Derivco", location: "La Lucia, South Africa", period: "2011 — 2014", color: "var(--neon-green)", bullets: [
+      "Planning, execution and sign-off for downloadable, browser and mobile applications.",
+      "ISO 9001 and 17025 compliance; checklists & test documentation.",
+      "Nominated for the Derivco 'Sky High' Helpful Hero award. Team super bonus — twice." ] }
+  ];
+
+  var skillGroups = [
+    { icon: "bot", title: "AI / Automation", color: "var(--neon-green)", items: ["Claude Code","Anthropic API","Agentic workflows","Playwright .NET","Cypress","Selenium WebDriver","NUnit","Postman / Newman"] },
+    { icon: "code", title: "Languages", color: "var(--neon-cyan)", items: ["C#","Java","JavaScript","SQL","HTML / CSS"] },
+    { icon: "sparkles", title: "Frameworks", color: "var(--neon-magenta)", items: ["BDD / Cucumber","Page Object Model","Nightwatch.js","Silverlight","Polymer"] },
+    { icon: "testtube", title: "Testing", color: "var(--neon-yellow)", items: ["Manual","Regression","API","Performance (JMeter)","A/B","Load","Mobile","Browser"] },
+    { icon: "zap", title: "Dev & Ops", color: "var(--neon-cyan)", items: ["JIRA","Confluence","Bamboo","GIT / GitLab","TFS","Docker","Rancher","Charles / Fiddler"] },
+    { icon: "award", title: "Methodologies", color: "var(--neon-green)", items: ["Agile","Scrum","ISTQB","IEEE 829","ISO 9001 / 17025"] }
+  ];
+
+  var features = [
+    { icon: "bot", title: "Internal API Test Generator", tag: "Python · Anthropic API", color: "var(--neon-green)", body: "Takes a schema/endpoint, generates test cases dynamically, exports a ready-to-run Postman collection. Cut manual scaffolding time significantly." },
+    { icon: "sparkles", title: "Claude SKILLs Library", tag: "C# · NUnit · Playwright", color: "var(--neon-cyan)", body: "DTO generation, factory setup, helper methods, full e2e boilerplate — reusable prompts the team drops into Claude Code to get a working starting point." },
+    { icon: "zap", title: "Claude-First PR Reviews", tag: "Workflow", color: "var(--neon-magenta)", body: "PR reviews start with a Claude Code pass to flag logic gaps and inconsistencies before the team sees it." },
+    { icon: "award", title: "Anthropic SKILLjar", tag: "6 courses · completed", color: "var(--neon-yellow)", body: "Intro to Claude · Prompt Engineering · Tool Use & Function Calling · Building with the API · Agentic Workflows · RAG." },
+    { icon: "zap", title: "Cloud Native Deployment", tag: "Docker · Helm · Tilt · Rancher", color: "var(--neon-green)", body: "Used Claude to place an application/service on Cloud Native. Created and tested Dockerfiles, Helm charts and Tiltfiles locally on Windows Docker / Rancher Desktop, then validated end-to-end on a remote VM." }
+  ];
+
+  function mix(color) { return "color-mix(in oklab, " + color + " 15%, transparent)"; }
+
+  // ---- Render timeline ----
+  var tl = document.getElementById("timeline-list");
+  timeline.forEach(function(t, i) {
+    var side = i % 2 === 0 ? "left" : "right";
+    var bullets = t.bullets.map(function(b) {
+      return '<li><span class="b" style="background:' + t.color + '"></span><span>' + b + '</span></li>';
+    }).join("");
+    var div = document.createElement("div");
+    div.className = "titem reveal " + side;
+    div.innerHTML =
+      '<div class="node"><div class="ring' + (t.current ? ' pulse' : '') + '" style="background:' + t.color + ';box-shadow:0 0 16px ' + t.color + ', 0 0 0 4px var(--bg)"></div></div>' +
+      '<div class="tcard" style="box-shadow:0 0 0 1px color-mix(in oklab,' + t.color + ' 22%, transparent)">' +
+        '<div class="tmeta">' +
+          '<span class="period" style="background:color-mix(in oklab,' + t.color + ' 18%, transparent);color:' + t.color + '">' + t.period + '</span>' +
+          (t.current ? '<span class="current-tag">Current</span>' : '') +
+        '</div>' +
+        '<h3 class="trole grotesk">' + t.role + '</h3>' +
+        '<div class="tcompany">' + t.company + ' · ' + t.location + '</div>' +
+        '<ul>' + bullets + '</ul>' +
+      '</div>';
+    tl.appendChild(div);
+  });
+
+  // ---- Render skills ----
+  var sg = document.getElementById("skills-grid");
+  skillGroups.forEach(function(g) {
+    var tags = g.items.map(function(it) { return '<span class="tag">' + it + '</span>'; }).join("");
+    var div = document.createElement("div");
+    div.className = "scard reveal";
+    div.innerHTML =
+      '<div class="scard-head"><div class="icon-box" style="background:' + mix(g.color) + ';color:' + g.color + '">' + ICONS[g.icon] + '</div><h3 class="grotesk">' + g.title + '</h3></div>' +
+      '<div class="tags">' + tags + '</div>';
+    sg.appendChild(div);
+  });
+
+  // ---- Render AI features ----
+  var ag = document.getElementById("ai-grid");
+  features.forEach(function(f) {
+    var div = document.createElement("div");
+    div.className = "fcard reveal";
+    div.innerHTML =
+      '<div class="glow" style="background:' + f.color + '"></div>' +
+      '<div class="fcard-head"><div class="icon-box-lg" style="background:' + mix(f.color) + ';color:' + f.color + '">' + ICONS[f.icon] + '</div><span class="tagpill">' + f.tag + '</span></div>' +
+      '<h3 class="grotesk">' + f.title + '</h3>' +
+      '<p>' + f.body + '</p>';
+    ag.appendChild(div);
+  });
+
+  // ---- Year ----
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // ---- Reveal on scroll ----
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        if (e.target.querySelectorAll) {
+          e.target.querySelectorAll(".bar > div").forEach(function(b) { b.style.width = b.getAttribute("data-pct") + "%"; });
+        }
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "-40px" });
+  document.querySelectorAll(".reveal").forEach(function(el) { io.observe(el); });
+</script>
+</body>
+</html>
